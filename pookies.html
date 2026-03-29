@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Pookie 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink-deep:   #f472b6;
+      --pink-mid:    #fb7eb8;
+      --pink-light:  #fce7f3;
+      --pink-pale:   #fdf2f8;
+      --white:       #ffffff;
+      --text-dark:   #831843;
+      --text-soft:   #be185d;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Quicksand', sans-serif;
+      background: var(--pink-pale);
+      color: var(--text-dark);
+    }
+
+    /* ── Canvas for falling petals ── */
+    #petalCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Stage: fullscreen centered flex ── */
+    .stage {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 0;
+    }
+
+    /* ── Scene wrapper — clouds sit around the card ── */
+    .scene {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Main Card ── */
+    .card {
+      position: relative;
+      background: rgba(255,255,255,0.82);
+      border: 2px solid rgba(244,114,182,0.35);
+      border-radius: 36px;
+      padding: 52px 56px 44px;
+      width: min(420px, 90vw);
+      text-align: center;
+      backdrop-filter: blur(14px);
+      box-shadow:
+        0 8px 40px rgba(244,114,182,0.22),
+        0 2px 8px rgba(244,114,182,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      animation: cardPop 0.9s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes cardPop {
+      0%   { opacity:0; transform: scale(0.6) translateY(40px); }
+      100% { opacity:1; transform: scale(1) translateY(0); }
+    }
+
+    /* ── Big bouncing heart ── */
+    .big-heart {
+      font-size: 88px;
+      display: block;
+      animation: heartBeat 1.4s ease-in-out infinite;
+      filter: drop-shadow(0 4px 18px rgba(244,114,182,0.55));
+      margin-bottom: 8px;
+    }
+
+    @keyframes heartBeat {
+      0%,100% { transform: scale(1);   }
+      14%     { transform: scale(1.18); }
+      28%     { transform: scale(1);   }
+      42%     { transform: scale(1.12); }
+      56%     { transform: scale(1);   }
+    }
+
+    /* ── Title ── */
+    .title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2rem, 7vw, 3rem);
+      color: var(--pink-deep);
+      line-height: 1.1;
+      margin-bottom: 10px;
+      text-shadow: 2px 3px 0 rgba(244,114,182,0.18);
+      animation: fadeSlide 0.9s 0.4s both;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 26px;
+      animation: fadeSlide 0.9s 0.6s both;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity:0; transform: translateY(16px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 60px;
+      height: 3px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--pink-deep), var(--pink-mid));
+      margin: 0 auto 24px;
+      animation: fadeSlide 0.9s 0.7s both;
+    }
+
+    /* ── Message text ── */
+    .message {
+      font-size: 0.97rem;
+      line-height: 1.7;
+      color: var(--text-soft);
+      max-width: 300px;
+      margin: 0 auto 28px;
+      animation: fadeSlide 0.9s 0.8s both;
+    }
+
+    /* ── Sparkle row ── */
+    .sparkles {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      animation: fadeSlide 0.9s 1s both;
+    }
+
+    .sparkles span {
+      display: inline-block;
+      animation: spin 3s linear infinite;
+    }
+    .sparkles span:nth-child(2) { animation-delay: 0.4s; animation-direction: reverse; }
+    .sparkles span:nth-child(3) { animation-delay: 0.8s; }
+
+    @keyframes spin {
+      0%   { transform: rotate(0deg)   scale(1);    }
+      50%  { transform: rotate(180deg) scale(1.25); }
+      100% { transform: rotate(360deg) scale(1);    }
+    }
+
+    /* ── Floating clouds / bubbles around the card ── */
+    .cloud {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid rgba(244,114,182,0.2);
+      animation: floatCloud 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .cloud:nth-child(1) { width:70px; height:70px; top:-30px; left:-40px; animation-duration:4.5s; font-size:1.8rem; display:flex;align-items:center;justify-content:center; }
+    .cloud:nth-child(2) { width:54px; height:54px; top: 20px; right:-35px; animation-delay:1s; animation-duration:5.5s; font-size:1.4rem; display:flex;align-items:center;justify-content:center; }
+    .cloud:nth-child(3) { width:46px; height:46px; bottom:10px; left:-28px; animation-delay:1.8s; font-size:1.2rem; display:flex;align-items:center;justify-content:center; }
+    .cloud:nth-child(4) { width:60px; height:60px; bottom:-18px; right:-36px; animation-delay:0.6s; animation-duration:6s; font-size:1.5rem; display:flex;align-items:center;justify-content:center; }
+
+    @keyframes floatCloud {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+
+    /* ── Bottom tagline ── */
+    .tagline {
+      margin-top: 28px;
+      font-size: 0.8rem;
+      color: var(--pink-mid);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      animation: fadeSlide 1s 1.2s both;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="petalCanvas"></canvas>
+
+  <div class="stage">
+    <div class="scene">
+      <!-- floating emoji bubbles -->
+      <div class="cloud">🌸</div>
+      <div class="cloud">🍬</div>
+      <div class="cloud">🌷</div>
+      <div class="cloud">🎀</div>
+
+      <div class="card">
+        <span class="big-heart">💖</span>
+        <div class="title">You are my<br>Pookie!</div>
+        <div class="divider"></div>
+        <p class="subtitle">always & forever ✨</p>
+        <p class="message">
+          In a world full of everything,<br>
+          you are my favourite thing — soft,<br>
+          sweet, and so very precious to me. 🌸
+        </p>
+        <div class="sparkles">
+          <span>✨</span><span>💕</span><span>✨</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="tagline">made with all the love 💗</p>
+  </div>
+
+<script>
+  /* ── Falling cherry-blossom petals ── */
+  const canvas = document.getElementById('petalCanvas');
+  const ctx    = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const PETAL_COLORS = [
+    'rgba(252,207,232,0.85)',
+    'rgba(249,168,212,0.75)',
+    'rgba(244,114,182,0.65)',
+    'rgba(255,255,255,0.80)',
+    'rgba(253,242,248,0.90)',
+  ];
+
+  const EMOJIS = ['🌸','💮','🌷','💕','✨','🍬'];
+
+  class Petal {
+    constructor() { this.reset(true); }
+
+    reset(init = false) {
+      this.x    = Math.random() * canvas.width;
+      this.y    = init ? Math.random() * canvas.height : -30;
+      this.size = Math.random() * 14 + 8;
+      this.speedY = Math.random() * 1.2 + 0.5;
+      this.speedX = (Math.random() - 0.5) * 1.2;
+      this.sway  = Math.random() * 2 - 1;
+      this.angle = Math.random() * Math.PI * 2;
+      this.spin  = (Math.random() - 0.5) * 0.06;
+      this.color = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
+      this.isEmoji = Math.random() < 0.22;
+      this.emoji   = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      this.opacity = Math.random() * 0.5 + 0.4;
+      this.t = 0;
+    }
+
+    drawPetal(ctx) {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      ctx.globalAlpha = this.opacity;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      // simple oval petal shape
+      ctx.ellipse(0, 0, this.size * 0.45, this.size * 0.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    drawEmoji(ctx) {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      ctx.font = `${this.size * 1.4}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      ctx.fillText(this.emoji, 0, 0);
+      ctx.restore();
+    }
+
+    update() {
+      this.t += 0.02;
+      this.x += this.speedX + Math.sin(this.t) * this.sway;
+      this.y += this.speedY;
+      this.angle += this.spin;
+      if (this.y > canvas.height + 40) this.reset();
+    }
+
+    draw(ctx) {
+      if (this.isEmoji) this.drawEmoji(ctx);
+      else this.drawPetal(ctx);
+    }
+  }
+
+  const petals = Array.from({ length: 55 }, () => new Petal());
+
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    petals.forEach(p => { p.update(); p.draw(ctx); });
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>
+
+</body>
+</html>
